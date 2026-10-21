@@ -33,6 +33,11 @@ jobs:
       - name: Install packwiz
         run: go install github.com/packwiz/packwiz@latest
 
+      # A mod for players whose required mod is only on the server (or the
+      # other way round) stops the game from starting; check-sides.py says why.
+      - name: Check every mod has what it needs
+        run: python3 .github/check-sides.py
+
       # index.toml and pack.toml's hash of it are made here, not in pull
       # requests: if every pull request carried them, the second of two would
       # always conflict with the first. This also checks every file is valid.

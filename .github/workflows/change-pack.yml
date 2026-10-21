@@ -150,6 +150,12 @@ jobs:
             done
           fi
 
+          # A mod's required mods must be installed on the same side as it
+          # (check-sides.py); widen them to "both" where they aren't.
+          while IFS= read -r line; do
+            [[ $line == fixed:* ]] && done_list+=("${line#fixed: }")
+          done < <(python3 .github/check-sides.py --fix)
+
           # Checks everything is valid; the result is left out of the pull
           # request, publishing makes it again (publish.yml says why).
           if ! packwiz refresh; then echo "::error::packwiz refresh failed"; exit 1; fi
