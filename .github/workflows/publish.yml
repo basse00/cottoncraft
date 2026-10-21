@@ -33,18 +33,17 @@ jobs:
       - name: Install packwiz
         run: go install github.com/packwiz/packwiz@latest
 
-      - name: index.toml is up to date
-        run: |
-          ~/go/bin/packwiz refresh
-          if ! git diff --exit-code; then
-            echo "::error::index.toml is out of date: run 'packwiz refresh' and commit the result"
-            exit 1
-          fi
+      # index.toml and pack.toml's hash of it are made here, not in pull
+      # requests: if every pull request carried them, the second of two would
+      # always conflict with the first. This also checks every file is valid.
+      - name: Build the index
+        run: ~/go/bin/packwiz refresh
 
       - name: Build the site
         run: |
           mkdir _site
           git archive HEAD | tar -x -C _site
+          cp index.toml pack.toml _site/
           rm -rf _site/.github _site/prism
           # The Prism instance players import once.
           mkdir -p prism/.minecraft
