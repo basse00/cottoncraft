@@ -99,7 +99,9 @@ jobs:
       - name: Make the changes
         id: change
         run: |
-          set -uo pipefail
+          # Errors are handled one name at a time below, not by stopping
+          # (GitHub starts steps with -e).
+          set +e -uo pipefail
           set -f  # names are never filename patterns
           export PATH=$HOME/go/bin:$PATH
           done_list=()
