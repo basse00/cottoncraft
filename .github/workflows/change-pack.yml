@@ -79,6 +79,9 @@ jobs:
               [[ -n $file ]] || { echo "::error::packwiz added nothing"; exit 1; }
               if [[ $SIDE != "as Modrinth says" ]]; then
                 sed -i "s/^side = .*/side = \"$SIDE\"/" "$file"
+              elif [[ $file != mods/* ]]; then
+                # Resource packs and shaders are for the players' screens only.
+                sed -i 's/^side = .*/side = "client"/' "$file"
               fi
               if [[ $OPTIONAL == true ]]; then
                 name=$(sed -n 's/^name = //p' "$file" | head -1)
