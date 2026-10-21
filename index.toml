@@ -16,11 +16,6 @@ hash = "c9adf08ce6b16f34993d3f204b3f5e4174b064322823dcc2e4598b79d21399c1"
 metafile = true
 
 [[files]]
-file = "mods/entitytexturefeatures.pw.toml"
-hash = "bdabe52b4c88b2f57ab21c130c3d00a1ebae771085d31b44674d13c35135feff"
-metafile = true
-
-[[files]]
 file = "mods/fabric-api.pw.toml"
 hash = "6dae83195be2f55ba9d38d72bb0da399f8e90b60f70fb4d792820c4f0b1bac43"
 metafile = true
@@ -83,6 +78,11 @@ metafile = true
 [[files]]
 file = "mods/waystones.pw.toml"
 hash = "85e00f97c2d58db3167bb6608558aa956654f5b0570e0abac082a1d0d4e3c19d"
+metafile = true
+
+[[files]]
+file = "resourcepacks/fresh-animations.pw.toml"
+hash = "435a3f840613486ed00c68c6eea16324083b9a5a745503b22942d6b53c06b5ed"
 metafile = true
 
 [[files]]

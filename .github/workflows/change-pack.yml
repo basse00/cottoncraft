@@ -98,7 +98,10 @@ jobs:
               title="Update everything"
               ;;
           esac
+          # Checks the change is valid; the result is left out of the pull
+          # request, publishing makes it again (publish.yml says why).
           packwiz refresh
+          git checkout -- index.toml pack.toml
 
           if git diff --quiet && [[ -z $(git ls-files --others --exclude-standard) ]]; then
             echo "::notice::Nothing changed"

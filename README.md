@@ -54,11 +54,17 @@ packwiz modrinth add faithful-32x # a resource pack or a shader works the same
 packwiz remove create             # take one out
 packwiz update --all              # newer versions of everything
 
+git checkout -- index.toml pack.toml   # leave these out (see below)
 git add -A && git commit -m "Add Create" && git push -u origin add-create
 ```
 
-Then open a pull request on GitHub. The check on it fails if you forgot
-`packwiz refresh` (run it and push again). Once it's merged, it's live.
+Then open a pull request on GitHub. Once it's merged, it's live.
+
+`index.toml` and the hash in `pack.toml` are rebuilt when the pack is
+published, so leave their changes out of your commit (the `git checkout`
+line above). If every pull request carried them, any two open at once
+would conflict. Only commit `pack.toml` when you mean to change it (a new
+Minecraft or Fabric version).
 
 Things to know:
 
