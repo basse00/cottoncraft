@@ -80,4 +80,4 @@ Things to know:
 | Lithium, FerriteCore | both | faster, less memory |
 | Sodium, Mod Menu (+ Text Placeholder API) | client | faster rendering, mod list in the menu |
 | Iris | client | shader support |
-| Complementary Reimagined | client, optional | shaders |
+| Complementary Reimagined, Complementary Unbound | client, optional (on by default) | shaders; turn on in Options > Video > Shader Packs |

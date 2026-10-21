@@ -14,5 +14,5 @@ version = "Bqen1mJX"
 
 [option]
 optional = true
-default = false
-description = "Shaders: pretty, but heavy on the GPU. Pick one in Options > Video > Shader Packs."
+default = true
+description = "Complementary Reimagined: shaders close to the vanilla look. Pick one in Options > Video > Shader Packs."
