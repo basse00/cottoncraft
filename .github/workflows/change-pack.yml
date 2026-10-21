@@ -1,0 +1,130 @@
+# A form on GitHub (Actions > Change the pack > Run workflow): add, remove or
+# update mods, resource packs and shaders without packwiz or git on your PC.
+# It makes the change on a new branch and opens a pull request; merge it and
+# everyone has it on their next launch.
+#
+# Needs: Settings > Actions > General > Workflow permissions >
+# "Allow GitHub Actions to create and approve pull requests".
+name: Change the pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: What to do
+        type: choice
+        options: [add, remove, update everything]
+        default: add
+      project:
+        description: >-
+          Modrinth name or link, e.g. fresh-animations or
+          https://modrinth.com/resourcepack/fresh-animations
+          (empty for "update everything")
+        required: false
+      side:
+        description: >-
+          Who needs it (add only). "as Modrinth says" is usually right;
+          "client" = only players (looks, menus), "both" = changes the game
+        type: choice
+        options: [as Modrinth says, both, client, server]
+        default: as Modrinth says
+      optional:
+        description: Optional (each player chooses when launching; add only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  change:
+    runs-on: ubuntu-latest
+    env:
+      ACTION: ${{ inputs.action }}
+      PROJECT: ${{ inputs.project }}
+      SIDE: ${{ inputs.side }}
+      OPTIONAL: ${{ inputs.optional }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Install packwiz
+        run: go install github.com/packwiz/packwiz@latest
+
+      - name: Make the change
+        id: change
+        run: |
+          set -euo pipefail
+          export PATH=$HOME/go/bin:$PATH
+          # A link becomes its last part; then only plain names get through.
+          slug=$(printf '%s' "$PROJECT" | tr -d '[:space:]' | sed -E 's#/+$##; s#.*/##')
+          if [[ $ACTION != "update everything" && ! $slug =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "::error::Give a Modrinth name like fresh-animations (got: $PROJECT)"
+            exit 1
+          fi
+
+          case $ACTION in
+            add)
+              packwiz modrinth add --project-id "$slug" -y | tee "$RUNNER_TEMP/out.txt"
+              file=$(ls {mods,resourcepacks,shaderpacks}/"$slug".pw.toml 2>/dev/null | head -1 || true)
+              if [[ -z $file ]]; then  # the file is named after the title instead
+                file=$(git ls-files --others --exclude-standard -- '*.pw.toml' | head -1)
+              fi
+              [[ -n $file ]] || { echo "::error::packwiz added nothing"; exit 1; }
+              if [[ $SIDE != "as Modrinth says" ]]; then
+                sed -i "s/^side = .*/side = \"$SIDE\"/" "$file"
+              fi
+              if [[ $OPTIONAL == true ]]; then
+                name=$(sed -n 's/^name = //p' "$file" | head -1)
+                printf '\n[option]\noptional = true\ndefault = false\ndescription = %s\n' "$name" >> "$file"
+              fi
+              title="Add $(sed -n 's/^name = "\(.*\)"/\1/p' "$file" | head -1)"
+              ;;
+            remove)
+              packwiz remove "$slug"
+              title="Remove $slug"
+              ;;
+            "update everything")
+              packwiz update --all -y | tee "$RUNNER_TEMP/out.txt"
+              title="Update everything"
+              ;;
+          esac
+          packwiz refresh
+
+          if git diff --quiet && [[ -z $(git ls-files --others --exclude-standard) ]]; then
+            echo "::notice::Nothing changed"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "title=$title" >> "$GITHUB_OUTPUT"
+
+      - name: Open a pull request
+        if: steps.change.outputs.changed == 'true'
+        env:
+          TITLE: ${{ steps.change.outputs.title }}
+        run: |
+          set -euo pipefail
+          branch="pack/${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add -A
+          git commit -q -m "$TITLE" -m "Asked for by @${GITHUB_ACTOR} with the Change the pack form."
+          git push -q -u origin "$branch"
+          {
+            echo "Asked for by @${GITHUB_ACTOR} with the **Change the pack** form."
+            echo
+            echo '```'
+            git show --stat --format= HEAD
+            echo '```'
+            echo
+            echo "Merge it and everyone gets it on their next launch (the server at the next 05:00 restart)."
+          } > "$RUNNER_TEMP/body.md"
+          gh pr create --title "$TITLE" --body-file "$RUNNER_TEMP/body.md" --base main --head "$branch"

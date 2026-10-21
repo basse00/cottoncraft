@@ -24,6 +24,22 @@ to what `pack.toml` says (or import the zip again).
 
 ## Changing the pack
 
+### The easy way: a form on GitHub
+
+No tools needed. On this repo: **Actions** > **Change the pack** (left) >
+**Run workflow** (right). Pick add, remove or update everything, type the
+Modrinth name (the last part of its link: `modrinth.com/resourcepack/fresh-animations`
+is `fresh-animations`), and press **Run workflow**. A minute later a pull
+request shows up under **Pull requests**; open it, check it, and press
+**Merge**. Everyone gets it on their next launch; the server at its 05:00
+restart.
+
+Resource packs and shaders download for everyone, but each player turns
+them on in game (Options > Resource Packs, or Video Settings > Shader
+Packs). If it needs other mods, they're added too.
+
+### With packwiz on your PC
+
 You need [git](https://git-scm.com) and
 [packwiz](https://packwiz.infra.link/installation/). Never commit `.jar`
 files: packwiz writes a small `.pw.toml` file per mod instead.
