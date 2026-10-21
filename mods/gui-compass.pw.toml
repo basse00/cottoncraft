@@ -1,0 +1,13 @@
+name = "GUI Compass"
+filename = "guicompass-26.3.0-5.1.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/ZORMkttv/versions/svDGbStH/guicompass-26.3.0-5.1.jar"
+hash-format = "sha512"
+hash = "c2ff8d0d4fe2869266ef954105eaf26ddc3fe053f3519cf9a66a7cb33dbcb8a20ba81192ca6bf682607ea5529c8de59793df4a8df1e2d4c4c3eb2fc4a5b93c84"
+
+[update]
+[update.modrinth]
+mod-id = "ZORMkttv"
+version = "svDGbStH"
