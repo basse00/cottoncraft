@@ -1,0 +1,13 @@
+name = "Resource Config API"
+filename = "resourceconfigapi-fabric-26.3-4.2.0.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/69TY9iyJ/versions/4vxzVME3/resourceconfigapi-fabric-26.3-4.2.0.jar"
+hash-format = "sha512"
+hash = "ab04b677e392369df5f6c10dd2c295687b8ca3accd270e3cb242ff93bcc45b3e90e78bf17e491bae84c4df16d47851a3e2e3ff5f39128bf067795066e8e989fd"
+
+[update]
+[update.modrinth]
+mod-id = "69TY9iyJ"
+version = "4vxzVME3"
