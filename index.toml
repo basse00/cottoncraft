@@ -1,0 +1,86 @@
+hash-format = "sha256"
+
+[[files]]
+file = "mods/balm.pw.toml"
+hash = "3f529d5fd5e99dbcba1364cfc68eefc9235e6956dcd05f4c6554116f89d9c9c9"
+metafile = true
+
+[[files]]
+file = "mods/bluemap.pw.toml"
+hash = "b3caf8e25c2a3487d1e0d45bd57ec3839e949d7ee4d28ae9645c4b8e76624f30"
+metafile = true
+
+[[files]]
+file = "mods/collective.pw.toml"
+hash = "c9adf08ce6b16f34993d3f204b3f5e4174b064322823dcc2e4598b79d21399c1"
+metafile = true
+
+[[files]]
+file = "mods/fabric-api.pw.toml"
+hash = "6dae83195be2f55ba9d38d72bb0da399f8e90b60f70fb4d792820c4f0b1bac43"
+metafile = true
+
+[[files]]
+file = "mods/fabric-language-kotlin.pw.toml"
+hash = "1811d49906aa7a1e7f1230535c6fec91be45129d028f7900cf35571a497e42b3"
+metafile = true
+
+[[files]]
+file = "mods/ferrite-core.pw.toml"
+hash = "069d81cab53c0141459ad4d70bcf3e10f17652f24cc62d3b4a0fc2cd2b700871"
+metafile = true
+
+[[files]]
+file = "mods/iris.pw.toml"
+hash = "3af2426b8d83a5fcda1ff6de2035d53bcff532653c196f2ea6d7647995e45131"
+metafile = true
+
+[[files]]
+file = "mods/lithium.pw.toml"
+hash = "a39389e4c813b70b984a0c8aed769825b32c321ee0b9aed1151d92cb38f77357"
+metafile = true
+
+[[files]]
+file = "mods/modmenu.pw.toml"
+hash = "cd05db76d670773ace1184abdd46126e7b7c75c2b70da82e1764cff9544c4269"
+metafile = true
+
+[[files]]
+file = "mods/placeholder-api.pw.toml"
+hash = "aa73c5c61a2e26d7c8aeafca23504f4e34e9d34238fffe4613b6f314dfd35776"
+metafile = true
+
+[[files]]
+file = "mods/shogi.pw.toml"
+hash = "7dce4255d013864163503866db2a902f7071d64ef184c3d40189c1ac9641a7f2"
+metafile = true
+
+[[files]]
+file = "mods/sodium.pw.toml"
+hash = "0bf314c578473659bd89915114cac8e60994988f405218726a48d35b06e9316c"
+metafile = true
+
+[[files]]
+file = "mods/tree-harvester.pw.toml"
+hash = "4e514caf5727ce5f30095cd8f0c2af971553e5ea7e4b9688709840b71e963309"
+metafile = true
+
+[[files]]
+file = "mods/veinminer-client.pw.toml"
+hash = "f3a223eac2ccc7e4638a0f9ad1c9c7a84a8238f3f432d83982f40577c40a7456"
+metafile = true
+
+[[files]]
+file = "mods/veinminer.pw.toml"
+hash = "b31cf6d9726de63feeee32a753a5b0225e8b3f07937b6f8a07ce69eefd4ee501"
+metafile = true
+
+[[files]]
+file = "mods/waystones.pw.toml"
+hash = "85e00f97c2d58db3167bb6608558aa956654f5b0570e0abac082a1d0d4e3c19d"
+metafile = true
+
+[[files]]
+file = "shaderpacks/complementary-reimagined.pw.toml"
+hash = "267e14b945e943d984772787c200f9b4929f961deda4cf8cac9a37d9d8097203"
+metafile = true

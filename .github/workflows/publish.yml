@@ -1,0 +1,69 @@
+# Checks every pull request, and publishes main to GitHub Pages, where
+# players' Prism and the server read it:
+#   https://basse00.github.io/cottoncraft/pack.toml   the pack
+#   https://basse00.github.io/cottoncraft/CottonCraft.zip   the Prism instance
+name: Publish pack
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: false
+
+      - name: Install packwiz
+        run: go install github.com/packwiz/packwiz@latest
+
+      - name: index.toml is up to date
+        run: |
+          ~/go/bin/packwiz refresh
+          if ! git diff --exit-code; then
+            echo "::error::index.toml is out of date: run 'packwiz refresh' and commit the result"
+            exit 1
+          fi
+
+      - name: Build the site
+        run: |
+          mkdir _site
+          git archive HEAD | tar -x -C _site
+          rm -rf _site/.github _site/prism
+          # The Prism instance players import once.
+          mkdir -p prism/.minecraft
+          curl -fsSL -o prism/.minecraft/packwiz-installer-bootstrap.jar \
+            https://github.com/packwiz/packwiz-installer-bootstrap/releases/download/v0.0.3/packwiz-installer-bootstrap.jar
+          (cd prism && zip -qr ../_site/CottonCraft.zip .)
+
+      - uses: actions/upload-pages-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
