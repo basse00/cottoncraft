@@ -1,7 +1,8 @@
 # A form on GitHub (Actions > Change the pack > Run workflow): add, remove or
 # update mods, resource packs and shaders without packwiz or git on your PC.
-# It makes the change on a new branch and opens a pull request; merge it and
-# everyone has it on their next launch.
+# Several at once; on a branch of their own, which later runs can add to
+# until it is merged. Each branch gets one pull request; merge it and
+# everyone has the changes on their next launch.
 #
 # Needs: Settings > Actions > General > Workflow permissions >
 # "Allow GitHub Actions to create and approve pull requests".
@@ -15,15 +16,19 @@ on:
         type: choice
         options: [add, remove, update everything]
         default: add
-      project:
+      projects:
         description: >-
-          Modrinth name or link, e.g. fresh-animations or
-          https://modrinth.com/resourcepack/fresh-animations
-          (empty for "update everything")
+          Modrinth names or links, separated by spaces or commas, e.g.
+          fresh-animations, appleskin (empty for "update everything")
+        required: false
+      branch:
+        description: >-
+          Branch name, e.g. spooky-update. The same name again adds to it
+          (until it's merged). Empty: a new branch each time.
         required: false
       side:
         description: >-
-          Who needs it (add only). "as Modrinth says" is usually right;
+          Who needs them (add only). "as Modrinth says" is usually right;
           "client" = only players (looks, menus), "both" = changes the game
         type: choice
         options: [as Modrinth says, both, client, server]
@@ -37,17 +42,26 @@ permissions:
   contents: write
   pull-requests: write
 
+# Two runs for the same branch wait for each other instead of racing.
+concurrency:
+  group: change-pack-${{ inputs.branch || github.run_id }}
+  cancel-in-progress: false
+
 jobs:
   change:
     runs-on: ubuntu-latest
     env:
       ACTION: ${{ inputs.action }}
-      PROJECT: ${{ inputs.project }}
+      PROJECTS: ${{ inputs.projects }}
+      BRANCH_NAME: ${{ inputs.branch }}
       SIDE: ${{ inputs.side }}
       OPTIONAL: ${{ inputs.optional }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-go@v6
         with:
@@ -57,80 +71,127 @@ jobs:
       - name: Install packwiz
         run: go install github.com/packwiz/packwiz@latest
 
-      - name: Make the change
-        id: change
+      - name: Pick the branch
+        id: branch
         run: |
           set -euo pipefail
-          export PATH=$HOME/go/bin:$PATH
-          # A link becomes its last part; then only plain names get through.
-          slug=$(printf '%s' "$PROJECT" | tr -d '[:space:]' | sed -E 's#/+$##; s#.*/##')
-          if [[ $ACTION != "update everything" && ! $slug =~ ^[A-Za-z0-9._-]+$ ]]; then
-            echo "::error::Give a Modrinth name like fresh-animations (got: $PROJECT)"
-            exit 1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -z $BRANCH_NAME ]]; then
+            branch="pack/${GITHUB_RUN_ID}"
+          else
+            name=$(printf '%s' "$BRANCH_NAME" | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9._-')
+            [[ -n $name ]] || { echo "::error::Use letters, digits and - in the branch name"; exit 1; }
+            branch="pack/$name"
           fi
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            git switch -q -c "$branch" "origin/$branch"
+            # Keep it up to date with what has been merged since.
+            git merge -q --no-edit origin/main || {
+              echo "::error::$branch conflicts with main; ask Daniel, or use a new branch name"; exit 1; }
+            echo "existing=true" >> "$GITHUB_OUTPUT"
+          else
+            git switch -q -c "$branch"
+            echo "existing=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "name=$branch" >> "$GITHUB_OUTPUT"
 
-          case $ACTION in
-            add)
-              packwiz modrinth add --project-id "$slug" -y | tee "$RUNNER_TEMP/out.txt"
-              file=$(ls {mods,resourcepacks,shaderpacks}/"$slug".pw.toml 2>/dev/null | head -1 || true)
-              if [[ -z $file ]]; then  # the file is named after the title instead
-                file=$(git ls-files --others --exclude-standard -- '*.pw.toml' | head -1)
+      - name: Make the changes
+        id: change
+        run: |
+          set -uo pipefail
+          set -f  # names are never filename patterns
+          export PATH=$HOME/go/bin:$PATH
+          done_list=()
+          names=()
+          failed=()
+
+          new_files() { git ls-files --others --exclude-standard -- '*.pw.toml' | sort; }
+
+          if [[ $ACTION == "update everything" ]]; then
+            if packwiz update --all -y; then done_list+=("updated everything"); names+=("everything"); else failed+=("update everything"); fi
+          else
+            # Split on commas and spaces; a link becomes its last part.
+            for item in $(printf '%s' "$PROJECTS" | tr ',' ' '); do
+              slug=$(printf '%s' "$item" | sed -E 's#/+$##; s#.*/##')
+              if [[ ! $slug =~ ^[A-Za-z0-9._-]+$ ]]; then
+                failed+=("$item (not a Modrinth name)"); continue
               fi
-              [[ -n $file ]] || { echo "::error::packwiz added nothing"; exit 1; }
+              if [[ $ACTION == remove ]]; then
+                if packwiz remove "$slug"; then done_list+=("removed $slug"); names+=("$slug"); else failed+=("$slug (not in the pack?)"); fi
+                continue
+              fi
+              if [[ -f mods/$slug.pw.toml || -f resourcepacks/$slug.pw.toml || -f shaderpacks/$slug.pw.toml ]]; then
+                failed+=("$slug (already in the pack)"); continue
+              fi
+              before=$(new_files)
+              if ! packwiz modrinth add --project-id "$slug" -y; then
+                failed+=("$slug (not found on Modrinth, or no build for this version)"); continue
+              fi
+              added=$(comm -13 <(printf '%s\n' "$before") <(new_files))
+              file=$(ls {mods,resourcepacks,shaderpacks}/"$slug".pw.toml 2>/dev/null | head -1)
+              [[ -n $file ]] || file=$(printf '%s\n' "$added" | head -1)
+              if [[ -z $file ]]; then failed+=("$slug (already in the pack?)"); continue; fi
               if [[ $SIDE != "as Modrinth says" ]]; then
                 sed -i "s/^side = .*/side = \"$SIDE\"/" "$file"
               elif [[ $file != mods/* ]]; then
                 # Resource packs and shaders are for the players' screens only.
                 sed -i 's/^side = .*/side = "client"/' "$file"
               fi
-              if [[ $OPTIONAL == true ]]; then
-                name=$(sed -n 's/^name = //p' "$file" | head -1)
-                printf '\n[option]\noptional = true\ndefault = false\ndescription = %s\n' "$name" >> "$file"
+              name=$(sed -n 's/^name = "\(.*\)"/\1/p' "$file" | head -1)
+              if [[ $OPTIONAL == true ]] && ! grep -q '^\[option\]' "$file"; then
+                printf '\n[option]\noptional = true\ndefault = false\ndescription = "%s"\n' "$name" >> "$file"
               fi
-              title="Add $(sed -n 's/^name = "\(.*\)"/\1/p' "$file" | head -1)"
-              ;;
-            remove)
-              packwiz remove "$slug"
-              title="Remove $slug"
-              ;;
-            "update everything")
-              packwiz update --all -y | tee "$RUNNER_TEMP/out.txt"
-              title="Update everything"
-              ;;
-          esac
-          # Checks the change is valid; the result is left out of the pull
+              extra=$(printf '%s\n' "$added" | grep -vx "$file" | sed 's#.*/##; s#\.pw\.toml$##' | paste -sd, - | sed 's/,/, /g')
+              done_list+=("added $name${extra:+ (and what it needs: $extra)}")
+              names+=("$name")
+            done
+          fi
+
+          # Checks everything is valid; the result is left out of the pull
           # request, publishing makes it again (publish.yml says why).
-          packwiz refresh
+          if ! packwiz refresh; then echo "::error::packwiz refresh failed"; exit 1; fi
           git checkout -- index.toml pack.toml
 
-          if git diff --quiet && [[ -z $(git ls-files --others --exclude-standard) ]]; then
-            echo "::notice::Nothing changed"
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-          echo "title=$title" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Change the pack"
+            for d in "${done_list[@]}"; do echo "- ✅ $d"; done
+            for f in "${failed[@]}"; do echo "- ❌ $f"; done
+          } | tee "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          for f in "${failed[@]}"; do echo "::warning::not done: $f"; done
 
-      - name: Open a pull request
-        if: steps.change.outputs.changed == 'true'
+          if [[ ${#done_list[@]} -eq 0 ]]; then
+            echo "::error::Nothing was changed"; exit 1
+          fi
+          verb=${ACTION%% *}
+          list=$(printf '%s\n' "${names[@]}" | paste -sd, - | sed 's/,/, /g')
+          echo "title=${verb^} $list" >> "$GITHUB_OUTPUT"
+
+      - name: Push and open (or add to) the pull request
         env:
+          BRANCH: ${{ steps.branch.outputs.name }}
+          EXISTING: ${{ steps.branch.outputs.existing }}
           TITLE: ${{ steps.change.outputs.title }}
         run: |
           set -euo pipefail
-          branch="pack/${GITHUB_RUN_ID}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
           git add -A
-          git commit -q -m "$TITLE" -m "Asked for by @${GITHUB_ACTOR} with the Change the pack form."
-          git push -q -u origin "$branch"
-          {
-            echo "Asked for by @${GITHUB_ACTOR} with the **Change the pack** form."
-            echo
-            echo '```'
-            git show --stat --format= HEAD
-            echo '```'
-            echo
-            echo "Merge it and everyone gets it on their next launch (the server at the next 05:00 restart)."
-          } > "$RUNNER_TEMP/body.md"
-          gh pr create --title "$TITLE" --body-file "$RUNNER_TEMP/body.md" --base main --head "$branch"
+          if git diff --cached --quiet; then
+            echo "::notice::Nothing new to commit"; exit 0
+          fi
+          git commit -q -m "${TITLE:0:100}" -m "Asked for by @${GITHUB_ACTOR} with the Change the pack form."
+          git push -q -u origin "$BRANCH"
+
+          pr=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          { echo "@${GITHUB_ACTOR} with the **Change the pack** form:"; echo
+            tail -n +2 "$RUNNER_TEMP/summary.md"; } > "$RUNNER_TEMP/body.md"
+          if [[ -n $pr ]]; then
+            gh pr comment "$pr" --body-file "$RUNNER_TEMP/body.md"
+            echo "::notice::Added to pull request #$pr"
+          else
+            if [[ $BRANCH == pack/[0-9]* ]]; then title="${TITLE:0:100}"; else title="Pack: ${BRANCH#pack/}"; fi
+            { cat "$RUNNER_TEMP/body.md"; echo
+              echo "Run the form again with branch \`${BRANCH#pack/}\` to add more here."
+              echo "Merge it and everyone gets it on their next launch (the server at the next 05:00 restart)."
+            } > "$RUNNER_TEMP/pr.md"
+            gh pr create --title "$title" --body-file "$RUNNER_TEMP/pr.md" --base main --head "$BRANCH"
+          fi
