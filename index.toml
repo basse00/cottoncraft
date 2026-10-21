@@ -81,6 +81,11 @@ hash = "85e00f97c2d58db3167bb6608558aa956654f5b0570e0abac082a1d0d4e3c19d"
 metafile = true
 
 [[files]]
+file = "resourcepacks/fresh-animations.pw.toml"
+hash = "435a3f840613486ed00c68c6eea16324083b9a5a745503b22942d6b53c06b5ed"
+metafile = true
+
+[[files]]
 file = "shaderpacks/complementary-reimagined.pw.toml"
 hash = "0c9f00162e6b776f7dbabeae862bc72718118242aa720c89205deaf0b4136e85"
 metafile = true
