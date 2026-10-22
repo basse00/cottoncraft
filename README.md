@@ -10,8 +10,9 @@ everyone's game and the server pick it up by themselves.
 
 1. Install [Prism Launcher](https://prismlauncher.org) and log in with your
    Microsoft account (Settings > Accounts).
-2. Download <https://basse00.github.io/cottoncraft/CottonCraft.zip>, then in
-   Prism: **Add Instance > Import**, pick the zip.
+2. In Prism: **Add Instance > Import**, paste
+   `https://basse00.github.io/cottoncraft/CottonCraft.zip` into the box and
+   press OK. No need to download it first.
 3. Launch it. Before the game starts, a small window downloads the mods.
    If it asks about optional mods, pick what you like.
 4. Resource packs and shaders are up to you (see below).
