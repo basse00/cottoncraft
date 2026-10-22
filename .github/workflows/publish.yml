@@ -7,6 +7,8 @@ name: Publish pack
 on:
   push:
     branches: [main]
+    # Only the form's branch list changed: nothing to publish.
+    paths-ignore: [.github/workflows/change-pack.yml]
   pull_request:
   workflow_dispatch:
 

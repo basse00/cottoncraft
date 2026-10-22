@@ -2,7 +2,8 @@
 # update mods without packwiz or git on your PC. Resource packs and shaders
 # are refused: each player adds their own.
 # Several at once; on a branch of their own, which later runs can add to
-# until it is merged. Each branch gets one pull request; merge it and
+# until it is merged: pick it in the branch dropdown, which branch-list.yml
+# keeps up to date. Each branch gets one pull request; merge it and
 # everyone has the changes on their next launch.
 #
 # Needs: Settings > Actions > General > Workflow permissions >
@@ -24,8 +25,19 @@ on:
         required: false
       branch:
         description: >-
-          Branch name, e.g. spooky-update. The same name again adds to it
-          (until it's merged). Empty: a new branch each time.
+          Branch: a new one, or one still open to add to it (the list updates
+          a minute after each run; reload the page)
+        type: choice
+        default: new branch
+        options:
+          # BEGIN branch list (branch-list.yml writes this part)
+          - "new branch"
+          - "new branch, named below"
+          # END branch list
+      new_branch:
+        description: >-
+          Name for the new branch, e.g. spooky-update (with "new branch,
+          named below"; empty with "new branch": a number)
         required: false
       side:
         description: >-
@@ -45,7 +57,7 @@ permissions:
 
 # Two runs for the same branch wait for each other instead of racing.
 concurrency:
-  group: change-pack-${{ inputs.branch || github.run_id }}
+  group: change-pack-${{ inputs.new_branch || (startsWith(inputs.branch, 'new branch') && github.run_id) || inputs.branch }}
   cancel-in-progress: false
 
 jobs:
@@ -54,7 +66,8 @@ jobs:
     env:
       ACTION: ${{ inputs.action }}
       PROJECTS: ${{ inputs.projects }}
-      BRANCH_NAME: ${{ inputs.branch }}
+      BRANCH_CHOICE: ${{ inputs.branch }}
+      NEW_BRANCH: ${{ inputs.new_branch }}
       SIDE: ${{ inputs.side }}
       OPTIONAL: ${{ inputs.optional }}
       GH_TOKEN: ${{ github.token }}
@@ -78,18 +91,27 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -z $BRANCH_NAME ]]; then
+          if [[ $BRANCH_CHOICE == "new branch, named below" && -z $NEW_BRANCH ]]; then
+            echo "::error::Type a name for the new branch, or pick \"new branch\""; exit 1
+          fi
+          if [[ $BRANCH_CHOICE == "new branch"* && -z $NEW_BRANCH ]]; then
             branch="pack/${GITHUB_RUN_ID}"
-          else
-            name=$(printf '%s' "$BRANCH_NAME" | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9._-')
+          elif [[ $BRANCH_CHOICE == "new branch"* ]]; then
+            # A name that already exists just adds to that branch.
+            name=$(printf '%s' "$NEW_BRANCH" | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9._-')
             [[ -n $name ]] || { echo "::error::Use letters, digits and - in the branch name"; exit 1; }
             branch="pack/$name"
+          else
+            # From the dropdown: the first word is the name.
+            branch="pack/${BRANCH_CHOICE%% *}"
+            git ls-remote --exit-code --heads origin "$branch" >/dev/null || {
+              echo "::error::$branch is gone (merged or deleted); pick another or a new branch"; exit 1; }
           fi
           if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
             git switch -q -c "$branch" "origin/$branch"
             # Keep it up to date with what has been merged since.
             git merge -q --no-edit origin/main || {
-              echo "::error::$branch conflicts with main; ask Daniel, or use a new branch name"; exit 1; }
+              echo "::error::$branch conflicts with main; ask Basse, or use a new branch"; exit 1; }
             echo "existing=true" >> "$GITHUB_OUTPUT"
           else
             git switch -q -c "$branch"
@@ -204,7 +226,7 @@ jobs:
           else
             if [[ $BRANCH == pack/[0-9]* ]]; then title="${TITLE:0:100}"; else title="Pack: ${BRANCH#pack/}"; fi
             { cat "$RUNNER_TEMP/body.md"; echo
-              echo "Run the form again with branch \`${BRANCH#pack/}\` to add more here."
+              echo "To add more here, run the form again and pick \`${BRANCH#pack/}\` under Branch."
               echo "Merge it and everyone gets it on their next launch (the server at the next 05:00 restart)."
             } > "$RUNNER_TEMP/pr.md"
             gh pr create --title "$title" --body-file "$RUNNER_TEMP/pr.md" --base main --head "$BRANCH"

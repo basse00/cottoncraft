@@ -52,6 +52,13 @@ request shows up under **Pull requests**; open it, check it, and press
 **Merge**. Everyone gets it on their next launch; the server at its 05:00
 restart.
 
+**Branch** decides where the change goes: **new branch** (the default)
+makes one with a number for a name; **new branch, named below** uses the
+name you type under it (e.g. `spooky-update`); or pick a branch from the
+list to add to one that isn't merged yet, so several changes end up in one
+pull request. The list updates itself a minute after each run or merge;
+reload the page to see it.
+
 If it needs other mods, they're added too. Resource packs and shaders are
 refused: each player adds their own (see Playing).
 

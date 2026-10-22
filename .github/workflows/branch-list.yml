@@ -1,0 +1,71 @@
+# Keeps the branch dropdown in the Change the pack form up to date: GitHub
+# can't fill one by itself, so this writes the branches with an open pull
+# request into change-pack.yml (.github/branch-list.py).
+#
+# Needs the secret BRANCH_LIST_TOKEN: GitHub's own token may not change
+# workflow files. A fine-grained token for this repo only, with Contents
+# and Workflows read and write. Without it this does nothing.
+name: Update the branch list
+
+on:
+  # After every form run (it may have made a branch)...
+  workflow_run:
+    workflows: [Change the pack]
+    types: [completed]
+  # ...when a pull request is merged or closed, or a branch deleted...
+  pull_request:
+    types: [closed]
+  delete:
+  # ...or by hand.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: branch-list
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # Pull requests from forks don't get the secret.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Check for the token
+        id: token
+        env:
+          HAS_TOKEN: ${{ secrets.BRANCH_LIST_TOKEN != '' }}
+        run: |
+          if [[ $HAS_TOKEN != true ]]; then
+            echo "::warning::No BRANCH_LIST_TOKEN secret, so the dropdown isn't updated (see branch-list.yml)"
+          fi
+          echo "ok=$HAS_TOKEN" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v5
+        if: steps.token.outputs.ok == 'true'
+        with:
+          ref: main
+          token: ${{ secrets.BRANCH_LIST_TOKEN }}
+
+      - name: Write the open branches into the form
+        if: steps.token.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh pr list --state open --limit 100 --json headRefName,title > "$RUNNER_TEMP/prs.json"
+          python3 .github/branch-list.py "$RUNNER_TEMP/prs.json"
+          if git diff --quiet; then
+            echo "::notice::The list was already up to date"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -qam "Change the pack: update the branch list"
+          # main may have moved on while this ran.
+          for _ in 1 2 3; do
+            git push -q origin HEAD:main && exit 0
+            git pull -q --rebase origin main
+          done
+          exit 1
