@@ -1,0 +1,13 @@
+name = "Better Block Tooltip"
+filename = "betterblocktooltip-fabric-26.3-1.0.3.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/Vefh2yIv/versions/EgERwGqi/betterblocktooltip-fabric-26.3-1.0.3.jar"
+hash-format = "sha512"
+hash = "0a31ed5743cc3815625560f11a914f5feffd6f404a322799afb52b08e416bb3800d04c91a9d9b60784819a10e8091a62e978bba8ebb4576a290539e0568b960a"
+
+[update]
+[update.modrinth]
+mod-id = "Vefh2yIv"
+version = "EgERwGqi"
