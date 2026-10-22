@@ -1,0 +1,13 @@
+name = "Backpacks"
+filename = "ly-backpacks-1.2.0.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/voixqwq3/versions/eZSaNhYn/ly-backpacks-1.2.0.jar"
+hash-format = "sha512"
+hash = "1ddafd3007b80c85012ea242dfdf3c5f48e50873215f8b949f2ce0429b18308559cda6a69640661a71b17a3b11b5b02bfac7c8971c5b128dd91906476b4bbcbb"
+
+[update]
+[update.modrinth]
+mod-id = "voixqwq3"
+version = "eZSaNhYn"
