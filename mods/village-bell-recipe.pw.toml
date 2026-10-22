@@ -1,0 +1,13 @@
+name = "Village Bell Recipe"
+filename = "villagebellrecipe-26.3.0-3.8.jar"
+side = "server"
+
+[download]
+url = "https://cdn.modrinth.com/data/u692zai1/versions/ExnLKtZ2/villagebellrecipe-26.3.0-3.8.jar"
+hash-format = "sha512"
+hash = "6d7d83be15621ed7efac5025379fed72df12a9846bdedeaf153627209925b86abb1f649676ecbf372100a69da9731bea7bdcc4a1d830513bac3ae297d135e3fb"
+
+[update]
+[update.modrinth]
+mod-id = "u692zai1"
+version = "ExnLKtZ2"
