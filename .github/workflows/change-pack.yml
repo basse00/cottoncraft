@@ -25,14 +25,15 @@ on:
         required: false
       branch:
         description: >-
-          Branch: a new one, or one still open to add to it (the list updates
-          a minute after each run; reload the page)
+          Branch: a new one, or yours to add to it, merged or not (the list
+          updates a minute after each run; reload the page)
         type: choice
         default: new branch
         options:
           # BEGIN branch list (branch-list.yml writes this part)
           - "new branch"
           - "new branch, named below"
+          - "sneakyspank"
           # END branch list
       new_branch:
         description: >-

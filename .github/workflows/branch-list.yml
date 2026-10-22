@@ -1,6 +1,6 @@
 # Keeps the branch dropdown in the Change the pack form up to date: GitHub
-# can't fill one by itself, so this writes the branches with an open pull
-# request into change-pack.yml (.github/branch-list.py).
+# can't fill one by itself, so this writes the pack/ branches into
+# change-pack.yml (.github/branch-list.py says which).
 #
 # Needs the secret BRANCH_LIST_TOKEN: GitHub's own token may not change
 # workflow files. A fine-grained token for this repo only, with Contents
@@ -49,14 +49,15 @@ jobs:
           ref: main
           token: ${{ secrets.BRANCH_LIST_TOKEN }}
 
-      - name: Write the open branches into the form
+      - name: Write the branches into the form
         if: steps.token.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          git ls-remote --heads origin 'pack/*' | cut -f2 > "$RUNNER_TEMP/branches.txt"
           gh pr list --state open --limit 100 --json headRefName,title > "$RUNNER_TEMP/prs.json"
-          python3 .github/branch-list.py "$RUNNER_TEMP/prs.json"
+          python3 .github/branch-list.py "$RUNNER_TEMP/branches.txt" "$RUNNER_TEMP/prs.json"
           if git diff --quiet; then
             echo "::notice::The list was already up to date"; exit 0
           fi

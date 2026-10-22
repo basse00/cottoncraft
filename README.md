@@ -54,10 +54,12 @@ restart.
 
 **Branch** decides where the change goes: **new branch** (the default)
 makes one with a number for a name; **new branch, named below** uses the
-name you type under it (e.g. `spooky-update`); or pick a branch from the
-list to add to one that isn't merged yet, so several changes end up in one
-pull request. The list updates itself a minute after each run or merge;
-reload the page to see it.
+name you type under it (e.g. `sneakyspank`); or pick a branch from the
+list to go on with it. Easiest: one branch each, named after you, and
+always pick that one. It's brought up to date with the newest pack first,
+merged or not; while its pull request is open your changes are added to
+it, and after a merge the next change opens a new one. The list updates
+itself a minute after each run; reload the page to see it.
 
 If it needs other mods, they're added too. Resource packs and shaders are
 refused: each player adds their own (see Playing).

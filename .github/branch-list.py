@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Write the open pack branches into the Change the pack form's dropdown.
+"""Write the pack branches into the Change the pack form's dropdown.
 
 GitHub can't fill a dropdown by itself: its choices are fixed text in
 change-pack.yml. branch-list.yml runs this after each form run, merge or
-deleted branch, with the open pull requests (gh pr list --json) in argv[1].
+deleted branch, with the pack/ branches (one per line) in argv[1] and the
+open pull requests (gh pr list --json) in argv[2].
+
+Every named branch is listed, merged or not: each person keeps one branch
+and goes on using it (the form brings it up to date with main first).
+Branches with a number for a name (made by "new branch") are listed only
+while their pull request is open, or the list would fill up with them.
 
 The form reads only the first word of a choice (the branch name without
 pack/), so the rest of the label is free to say what's in it.
@@ -14,15 +20,17 @@ from pathlib import Path
 FORM = Path(__file__).parent / "workflows/change-pack.yml"
 FIXED = ["new branch", "new branch, named below"]
 
-prs = json.load(open(sys.argv[1]))
+branches = sorted(b.strip().removeprefix("refs/heads/").removeprefix("pack/")
+                  for b in open(sys.argv[1]) if b.strip())
+open_prs = {pr["headRefName"].removeprefix("pack/"): pr["title"]
+            for pr in json.load(open(sys.argv[2])) if pr["headRefName"].startswith("pack/")}
 labels = []
-for pr in sorted(prs, key=lambda p: p["headRefName"]):
-    head = pr["headRefName"]
-    if not head.startswith("pack/"):
-        continue
-    name = head.removeprefix("pack/")
-    # Automatic names are run numbers; the title says what's in them.
-    labels.append(f"{name} ({pr['title'][:60]})" if name.isdigit() else name)
+for name in branches:
+    if not name.isdigit():
+        labels.append(name)
+    elif name in open_prs:
+        # Automatic names are run numbers; the title says what's in them.
+        labels.append(f"{name} ({open_prs[name][:60]})")
 
 text = FORM.read_text()
 start, end = "# BEGIN branch list", "# END branch list"
