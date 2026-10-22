@@ -14,9 +14,16 @@ everyone's game and the server pick it up by themselves.
    Prism: **Add Instance > Import**, pick the zip.
 3. Launch it. Before the game starts, a small window downloads the mods.
    The first time it asks about optional ones (shaders); pick what you like.
+4. The server is already in **Multiplayer** as "CottonCraft" (you still
+   need to be on the whitelist: `/mc add` on Discord).
 
 That's all. Every time you press Launch it fetches whatever changed since
 last time. Changes reach the site a few minutes after they're merged.
+
+The server list comes from `servers.dat` here, but only for players who
+don't have a server list yet (it is marked `preserve` in `index.toml`, so
+nobody's own list is ever overwritten). If the server's address changes,
+change it in `servers.dat` and tell everyone to edit their entry.
 
 If the game won't start with a version mismatch, the Minecraft or Fabric
 version has changed: right-click the instance > Edit > Version, and set it

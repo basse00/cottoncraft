@@ -11,8 +11,23 @@ hash = "b3caf8e25c2a3487d1e0d45bd57ec3839e949d7ee4d28ae9645c4b8e76624f30"
 metafile = true
 
 [[files]]
+file = "mods/carry-on.pw.toml"
+hash = "21e9d2a9919d7208f00fdacb1841e7a671e824f0c735f6fee0b45983aaf3501d"
+metafile = true
+
+[[files]]
 file = "mods/collective.pw.toml"
-hash = "c9adf08ce6b16f34993d3f204b3f5e4174b064322823dcc2e4598b79d21399c1"
+hash = "48e6e4d7f0b5cc5f23d8ec0be604dc2e3a0029385baa5ba3a40bb5e3157af409"
+metafile = true
+
+[[files]]
+file = "mods/entity-model-features.pw.toml"
+hash = "d00381d69d0dba1911229acbc2f89887026d72cc0270a27c94c1e7d06a61fd19"
+metafile = true
+
+[[files]]
+file = "mods/entitytexturefeatures.pw.toml"
+hash = "bdabe52b4c88b2f57ab21c130c3d00a1ebae771085d31b44674d13c35135feff"
 metafile = true
 
 [[files]]
@@ -31,8 +46,23 @@ hash = "069d81cab53c0141459ad4d70bcf3e10f17652f24cc62d3b4a0fc2cd2b700871"
 metafile = true
 
 [[files]]
+file = "mods/gui-compass.pw.toml"
+hash = "e1103fbb39e08ecad6cfe93b70c3965c8410b8bb687b3dcc8ddf1b30c3bbbfd4"
+metafile = true
+
+[[files]]
+file = "mods/iceberg.pw.toml"
+hash = "48b9011489f9adc168df5ac842c605e4ed1854a5a5eafcbc16fc181cb818c87e"
+metafile = true
+
+[[files]]
 file = "mods/iris.pw.toml"
 hash = "3af2426b8d83a5fcda1ff6de2035d53bcff532653c196f2ea6d7647995e45131"
+metafile = true
+
+[[files]]
+file = "mods/legendary-tooltips.pw.toml"
+hash = "a32973a0080051c5a5e1c9a66be915fa1b1de207fcb91aeb20b5d905daeeb49b"
 metafile = true
 
 [[files]]
@@ -41,13 +71,48 @@ hash = "a39389e4c813b70b984a0c8aed769825b32c321ee0b9aed1151d92cb38f77357"
 metafile = true
 
 [[files]]
+file = "mods/macaws-roofs.pw.toml"
+hash = "57fdbf7cb0b77dab9fefcced4c8c26e03ca8d8614efd3c06cfa10e931fc7eb50"
+metafile = true
+
+[[files]]
 file = "mods/modmenu.pw.toml"
 hash = "cd05db76d670773ace1184abdd46126e7b7c75c2b70da82e1764cff9544c4269"
 metafile = true
 
 [[files]]
+file = "mods/mouse-tweaks.pw.toml"
+hash = "d9f809b321cdd117600e45f92215c8e750ed0b65641c18d394bb4c111019581d"
+metafile = true
+
+[[files]]
+file = "mods/ore-vein-miner.pw.toml"
+hash = "d6070b4c832648f4112a44741588d6f92ee708d88ad8cf4cf1a6f5307155984a"
+metafile = true
+
+[[files]]
 file = "mods/placeholder-api.pw.toml"
 hash = "aa73c5c61a2e26d7c8aeafca23504f4e34e9d34238fffe4613b6f314dfd35776"
+metafile = true
+
+[[files]]
+file = "mods/prism-lib.pw.toml"
+hash = "053c21322d6b99b9a8748c987ca9be5d710ee874e85be28370255c0a45b2f040"
+metafile = true
+
+[[files]]
+file = "mods/resource-backpacks.pw.toml"
+hash = "5b9dec601f2bf1da896d1f02778a7289b516bf0196421b5dd37d9e3a71e8090b"
+metafile = true
+
+[[files]]
+file = "mods/resource-config-api.pw.toml"
+hash = "42dd14c2170d615b331d10113c3d897c7a3cb0b488557c79502ef50030d77d3b"
+metafile = true
+
+[[files]]
+file = "mods/resource-library.pw.toml"
+hash = "1e813015c06665cf5a5543b872ca668bdd75514f8d241f069bc7115dd2dd6f5c"
 metafile = true
 
 [[files]]
@@ -58,6 +123,16 @@ metafile = true
 [[files]]
 file = "mods/sodium.pw.toml"
 hash = "0bf314c578473659bd89915114cac8e60994988f405218726a48d35b06e9316c"
+metafile = true
+
+[[files]]
+file = "mods/sound-physics-remastered.pw.toml"
+hash = "9bab2f7038705a3a14c522ef378743465a596f2d1e28305c2c9a291cbb7d6289"
+metafile = true
+
+[[files]]
+file = "mods/trade-cycling.pw.toml"
+hash = "e6a89097f8cf10c5ef593a961a0a5a3b4ac7cb26a7d71ae8d47e58ca31d0409a"
 metafile = true
 
 [[files]]
@@ -81,9 +156,24 @@ hash = "85e00f97c2d58db3167bb6608558aa956654f5b0570e0abac082a1d0d4e3c19d"
 metafile = true
 
 [[files]]
+file = "mods/xaeros-minimap.pw.toml"
+hash = "0ddbddb0f93319bb51f4a0d2e1419d587609b152d5e953ef058fb68c9f3d4089"
+metafile = true
+
+[[files]]
+file = "mods/xaeros-world-map.pw.toml"
+hash = "1d78fecab0f34708540335a8e8f71d7c271facf0a018f2c10fbedc82e7d6d8df"
+metafile = true
+
+[[files]]
 file = "resourcepacks/fresh-animations.pw.toml"
 hash = "435a3f840613486ed00c68c6eea16324083b9a5a745503b22942d6b53c06b5ed"
 metafile = true
+
+[[files]]
+file = "servers.dat"
+hash = "74068bd0df12d1edfe30b75c3d5e5c3dc354df4ae2e5b32f755f1c727a32a514"
+preserve = true
 
 [[files]]
 file = "shaderpacks/complementary-reimagined.pw.toml"
@@ -93,4 +183,14 @@ metafile = true
 [[files]]
 file = "shaderpacks/complementary-unbound.pw.toml"
 hash = "4d37022067418ffd400bfb7b135c36276634fd2bc033cbfab1a1aa76eee388f3"
+metafile = true
+
+[[files]]
+file = "shaderpacks/photon-shader.pw.toml"
+hash = "1e4109987a9d4b0bab4302601e08b365b0e3d5b3a39b14b7134f8655c29a6bcc"
+metafile = true
+
+[[files]]
+file = "shaderpacks/solas-shader.pw.toml"
+hash = "dd4769ea99de1154c60b143c61b04058f962caa91e903e68ecbbf60431d3c555"
 metafile = true
