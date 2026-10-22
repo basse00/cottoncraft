@@ -1,0 +1,18 @@
+name = "Hey Wiki"
+filename = "heywiki-1.9.1+26.3-fabric.jar"
+side = "client"
+
+[download]
+url = "https://cdn.modrinth.com/data/6DnswkCZ/versions/zZ7eWOC0/heywiki-1.9.1%2B26.3-fabric.jar"
+hash-format = "sha512"
+hash = "033585c70b1a4d754587f3b39f671835c15ecb259eefc2ce9d6ca561c1e363cd281f46d61c3b00881ed3e9225f77cae62b6fe04138ebbbc0e004871fd7b635fe"
+
+[update]
+[update.modrinth]
+mod-id = "6DnswkCZ"
+version = "zZ7eWOC0"
+
+[option]
+optional = true
+default = false
+description = "Hey Wiki"
