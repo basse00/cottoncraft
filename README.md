@@ -65,6 +65,7 @@ git clone https://github.com/basse00/cottoncraft.git
 cd cottoncraft
 git switch -c add-create          # a branch for your change
 
+packwiz refresh                   # first: brings index.toml up to date
 packwiz modrinth add create       # a mod, by its name in the Modrinth URL
 packwiz remove create             # take one out
 packwiz update --all              # newer versions of everything

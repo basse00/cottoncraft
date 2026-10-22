@@ -111,6 +111,10 @@ jobs:
 
           new_files() { git ls-files --others --exclude-standard -- '*.pw.toml' | sort; }
 
+          # index.toml in git is out of date (publishing builds it), and
+          # packwiz finds mods to remove or update through it.
+          packwiz refresh >/dev/null || { echo "::error::packwiz refresh failed"; exit 1; }
+
           if [[ $ACTION == "update everything" ]]; then
             if packwiz update --all -y; then done_list+=("updated everything"); names+=("everything"); else failed+=("update everything"); fi
           else
