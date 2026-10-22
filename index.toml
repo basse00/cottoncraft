@@ -166,31 +166,6 @@ hash = "1d78fecab0f34708540335a8e8f71d7c271facf0a018f2c10fbedc82e7d6d8df"
 metafile = true
 
 [[files]]
-file = "resourcepacks/fresh-animations.pw.toml"
-hash = "435a3f840613486ed00c68c6eea16324083b9a5a745503b22942d6b53c06b5ed"
-metafile = true
-
-[[files]]
 file = "servers.dat"
 hash = "74068bd0df12d1edfe30b75c3d5e5c3dc354df4ae2e5b32f755f1c727a32a514"
 preserve = true
-
-[[files]]
-file = "shaderpacks/complementary-reimagined.pw.toml"
-hash = "0c9f00162e6b776f7dbabeae862bc72718118242aa720c89205deaf0b4136e85"
-metafile = true
-
-[[files]]
-file = "shaderpacks/complementary-unbound.pw.toml"
-hash = "4d37022067418ffd400bfb7b135c36276634fd2bc033cbfab1a1aa76eee388f3"
-metafile = true
-
-[[files]]
-file = "shaderpacks/photon-shader.pw.toml"
-hash = "1e4109987a9d4b0bab4302601e08b365b0e3d5b3a39b14b7134f8655c29a6bcc"
-metafile = true
-
-[[files]]
-file = "shaderpacks/solas-shader.pw.toml"
-hash = "dd4769ea99de1154c60b143c61b04058f962caa91e903e68ecbbf60431d3c555"
-metafile = true

@@ -1,7 +1,7 @@
 # CottonCraft
 
-Our modpack: Minecraft 26.3 on Fabric. This repo holds the **list** of mods,
-resource packs, shaders and configs; the files themselves come from
+Our modpack: Minecraft 26.3 on Fabric. This repo holds the **list** of mods
+and configs; the files themselves come from
 [Modrinth](https://modrinth.com). When something is merged to `main`, it is
 published to <https://basse00.github.io/cottoncraft/pack.toml>, and
 everyone's game and the server pick it up by themselves.
@@ -13,8 +13,9 @@ everyone's game and the server pick it up by themselves.
 2. Download <https://basse00.github.io/cottoncraft/CottonCraft.zip>, then in
    Prism: **Add Instance > Import**, pick the zip.
 3. Launch it. Before the game starts, a small window downloads the mods.
-   The first time it asks about optional ones (shaders); pick what you like.
-4. The server is already in **Multiplayer** as "CottonCraft" (you still
+   If it asks about optional mods, pick what you like.
+4. Resource packs and shaders are up to you (see below).
+5. The server is already in **Multiplayer** as "CottonCraft" (you still
    need to be on the whitelist: `/mc add` on Discord).
 
 That's all. Every time you press Launch it fetches whatever changed since
@@ -24,6 +25,15 @@ The server list comes from `servers.dat` here, but only for players who
 don't have a server list yet (it is marked `preserve` in `index.toml`, so
 nobody's own list is ever overwritten). If the server's address changes,
 change it in `servers.dat` and tell everyone to edit their entry.
+
+### Your own resource packs and shaders
+
+They aren't in the pack: everyone picks their own. In Prism, right-click
+the instance > **Edit** > **Resource packs** (or **Shader packs**) >
+**Download**, or drop a zip from Modrinth into those folders. The pack
+never touches them. Shaders work because Iris is in the pack, and
+resource packs with animated or custom mobs (Fresh Animations and the
+like) because Entity Model Features and Entity Texture Features are.
 
 If the game won't start with a version mismatch, the Minecraft or Fabric
 version has changed: right-click the instance > Edit > Version, and set it
@@ -35,15 +45,14 @@ to what `pack.toml` says (or import the zip again).
 
 No tools needed. On this repo: **Actions** > **Change the pack** (left) >
 **Run workflow** (right). Pick add, remove or update everything, type the
-Modrinth name (the last part of its link: `modrinth.com/resourcepack/fresh-animations`
-is `fresh-animations`), and press **Run workflow**. A minute later a pull
+Modrinth name (the last part of its link: `modrinth.com/mod/appleskin`
+is `appleskin`), and press **Run workflow**. A minute later a pull
 request shows up under **Pull requests**; open it, check it, and press
 **Merge**. Everyone gets it on their next launch; the server at its 05:00
 restart.
 
-Resource packs and shaders download for everyone, but each player turns
-them on in game (Options > Resource Packs, or Video Settings > Shader
-Packs). If it needs other mods, they're added too.
+If it needs other mods, they're added too. Resource packs and shaders are
+refused: each player adds their own (see Playing).
 
 ### With packwiz on your PC
 
@@ -57,7 +66,6 @@ cd cottoncraft
 git switch -c add-create          # a branch for your change
 
 packwiz modrinth add create       # a mod, by its name in the Modrinth URL
-packwiz modrinth add faithful-32x # a resource pack or a shader works the same
 packwiz remove create             # take one out
 packwiz update --all              # newer versions of everything
 
@@ -78,7 +86,7 @@ Things to know:
 - **Which side**: each `.pw.toml` has `side = "both"`, `"client"` or
   `"server"`. Mods that change the world, items or blocks must be `both`,
   or players can't join. Things only for the screen (Sodium, Iris,
-  minimaps, shaders) are `client`. When packwiz warns "marked for both",
+  minimaps) are `client`. When packwiz warns "marked for both",
   that's usually fine to leave.
 - **Optional**: add this to a `.pw.toml` to let each player choose:
   ```toml
@@ -109,4 +117,3 @@ Things to know:
 | Lithium, FerriteCore | both | faster, less memory |
 | Sodium, Mod Menu (+ Text Placeholder API) | client | faster rendering, mod list in the menu |
 | Iris | client | shader support |
-| Complementary Reimagined, Complementary Unbound | client, optional (on by default) | shaders; turn on in Options > Video > Shader Packs |

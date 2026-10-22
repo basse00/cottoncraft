@@ -1,5 +1,6 @@
 # A form on GitHub (Actions > Change the pack > Run workflow): add, remove or
-# update mods, resource packs and shaders without packwiz or git on your PC.
+# update mods without packwiz or git on your PC. Resource packs and shaders
+# are refused: each player adds their own.
 # Several at once; on a branch of their own, which later runs can add to
 # until it is merged. Each branch gets one pull request; merge it and
 # everyone has the changes on their next launch.
@@ -134,11 +135,12 @@ jobs:
               file=$(ls {mods,resourcepacks,shaderpacks}/"$slug".pw.toml 2>/dev/null | head -1)
               [[ -n $file ]] || file=$(printf '%s\n' "$added" | head -1)
               if [[ -z $file ]]; then failed+=("$slug (already in the pack?)"); continue; fi
+              if [[ $file != mods/* ]]; then
+                printf '%s\n' "$added" | xargs -r rm -f
+                failed+=("$slug (a resource pack or shader: each player adds those themselves)"); continue
+              fi
               if [[ $SIDE != "as Modrinth says" ]]; then
                 sed -i "s/^side = .*/side = \"$SIDE\"/" "$file"
-              elif [[ $file != mods/* ]]; then
-                # Resource packs and shaders are for the players' screens only.
-                sed -i 's/^side = .*/side = "client"/' "$file"
               fi
               name=$(sed -n 's/^name = "\(.*\)"/\1/p' "$file" | head -1)
               if [[ $OPTIONAL == true ]] && ! grep -q '^\[option\]' "$file"; then
