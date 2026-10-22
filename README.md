@@ -61,21 +61,59 @@ You need [git](https://git-scm.com) and
 [packwiz](https://packwiz.infra.link/installation/). Never commit `.jar`
 files: packwiz writes a small `.pw.toml` file per mod instead.
 
-```bash
+Once, get the repo:
+
+```
 git clone https://github.com/basse00/cottoncraft.git
-cd cottoncraft
-git switch -c add-create          # a branch for your change
-
-packwiz refresh                   # first: brings index.toml up to date
-packwiz modrinth add create       # a mod, by its name in the Modrinth URL
-packwiz remove create             # take one out
-packwiz update --all              # newer versions of everything
-
-git checkout -- index.toml pack.toml   # leave these out (see below)
-git add -A && git commit -m "Add Create" && git push -u origin add-create
 ```
 
-Then open a pull request on GitHub. Once it's merged, it's live.
+Then every change goes the same four steps: get the newest pack, make a
+branch, change things, send it.
+
+**1. Start (every time)**
+```
+cd cottoncraft
+git switch main
+git pull
+git switch -c <short-name>        # e.g. add-appleskin
+packwiz refresh                   # first: brings index.toml up to date
+```
+
+**2. Change the pack**
+```
+packwiz modrinth add <name>       # add a mod; <name> = last part of its Modrinth link
+packwiz remove <name>             # remove; <name> = file name in mods/ without .pw.toml
+packwiz update <name>             # newer version of one mod
+packwiz update --all              # newer versions of everything
+```
+- No `mr` with `remove` or `update`; only `add` has it.
+- Mods only. Resource packs and shaders are each player's own choice.
+- If packwiz says "marked for both", that's usually fine.
+
+**3. Send it**
+```
+git checkout -- index.toml pack.toml   # always: publishing builds these two
+git status                             # check only your changes are listed
+git add -A
+git commit -m "Add AppleSkin"
+git push -u origin <short-name>
+```
+
+**4. On GitHub**
+- **Compare & pull request**, then **Create**.
+- Wait for the green check, then **Merge**.
+- Players get it on their next launch. The server gets it at 05:00, or
+  straight away with `/mc restart` in Discord.
+
+**If something goes wrong**
+
+| Problem | Fix |
+|---|---|
+| "Can't find this file" | Run `packwiz refresh` first |
+| Merge conflict | Start a new branch from the newest main and redo the change |
+| Red check on the pull request | Click it: it says which mod is missing what |
+| Forgot to make a branch | Fine: push the branch you're on and make a pull request from it |
+| Want to undo something on a branch | Do the opposite (`add` / `remove`), then commit and push again |
 
 `index.toml` and the hash in `pack.toml` are rebuilt when the pack is
 published, so leave their changes out of your commit (the `git checkout`
@@ -101,7 +139,7 @@ Things to know:
   `.minecraft/config/`) and run `packwiz refresh`; it's sent to everyone and
   the server, and overwrites their own copy when it changes here.
 - **Test before merging** big changes: a mod that breaks the server stops it
-  for everyone. Ask Daniel to try a branch first if unsure.
+  for everyone. Ask Basse to try a branch first if unsure.
 - **Minecraft or Fabric version**: change it in `pack.toml` with
   `packwiz migrate minecraft <version>`, and check every mod has a build for
   it. Players then update their instance once (see above).
