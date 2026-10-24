@@ -1,5 +1,5 @@
 """CottonCraft's Prism icon (prism/cottoncraft.png): a pickaxe whose head is cotton bolls, and
-"100% COTTON PICK". Drawn on a 64x64 grid, saved 4x (256 px).
+"100% COTTON PICK". Big text over a small pickaxe, drawn on a 64x64 grid, saved 4x (256 px).
 
 Run: python3 .github/make-icon.py prism/cottoncraft.png  (needs Pillow)"""
 from PIL import Image
@@ -22,29 +22,32 @@ F = {"1": ["010","110","010","010","111"], "0": ["111","101","101","101","111"],
      "O": ["111","101","101","101","111"], "T": ["111","010","010","010","010"],
      "N": ["101","111","111","101","101"], "P": ["111","101","111","100","100"],
      "I": ["111","010","010","010","111"], "K": ["101","101","110","101","101"], " ": ["000"]*5}
+Z = 2                                     # text pixel size
 def text(s, y):
-    w = len(s) * 4 - 1; x0 = (N - w) // 2
-    for i, ch in enumerate(s):
-        for r, row in enumerate(F[ch]):
-            for c, bit in enumerate(row):
-                if bit == "1":
-                    put(x0 + i*4 + c + 1, y + r + 1, ORANGE_D)   # shadow
-    for i, ch in enumerate(s):
-        for r, row in enumerate(F[ch]):
-            for c, bit in enumerate(row):
-                if bit == "1":
-                    put(x0 + i*4 + c, y + r, ORANGE)
-text("100% COTTON", 2)
-text("PICK", 9)
+    w = (len(s) * 4 - 1) * Z; x0 = (N - w) // 2
+    for colour, off in ((ORANGE_D, 1), (ORANGE, 0)):      # shadow, then letters
+        for i, ch in enumerate(s):
+            for r, row in enumerate(F[ch]):
+                for c, bit in enumerate(row):
+                    if bit == "1":
+                        for zy in range(Z):
+                            for zx in range(Z):
+                                put(x0 + (i*4 + c)*Z + zx + off, y + r*Z + zy + off, colour)
+text("100%", 1)
+text("COTTON", 13)
+text("PICK", 25)
 
 # --- the head: a cotton branch bent like a Minecraft pickaxe's head, with
 # a big boll in the middle and smaller ones towards the tips
-ox, oy, R = 18, 52, 27                    # centre of the arc
+S = 0.56                                  # pickaxe size (1 = the whole icon)
+X0, Y0 = 18, 37                           # its top-left corner
+T = lambda x, y: (X0 + (x - 7) * S, Y0 + (y - 17) * S)
+ox, oy = T(18, 52); R = 27 * S            # centre of the arc
 P = lambda a, rr=R: (ox + rr*math.cos(math.radians(a)), oy + rr*math.sin(math.radians(a)))
-bolls = [(-98, 4.9), (-72, 6.0), (-45, 7.6), (-18, 6.0), (8, 4.9)]
+bolls = [(a, r * S) for a, r in [(-98, 5.4), (-72, 6.4), (-45, 8.0), (-18, 6.4), (8, 5.4)]]
 
 # --- handle: from bottom-left to the middle of the head
-hx0, hy0, hx1, hy1 = 7, 60, 36, 31
+(hx0, hy0), (hx1, hy1) = T(7, 60), T(36, 31)
 def seg(x, y):
     vx, vy = hx1 - hx0, hy1 - hy0
     t = max(0, min(1, ((x-hx0)*vx + (y-hy0)*vy) / (vx*vx + vy*vy)))
@@ -52,13 +55,13 @@ def seg(x, y):
 for y in range(N):
     for x in range(N):
         d, side = seg(x, y)
-        if d <= 2.2:
-            put(x, y, WOOD_D if d > 1.4 else WOOD_L if side < -0.3 else WOOD)
+        if d <= 1.6:
+            put(x, y, WOOD_D if d > 0.9 else WOOD_L if side < -0.3 else WOOD)
 
 # --- the branch along the arc (brown, 2 px), under the bolls
 for k in range(-104, 15):
-    for dr in (-0.6, 0.6):
-        x, y = P(k, R - 2 + dr); put(round(x), round(y), BRACT_D if dr > 0 else BRACT)
+    for dr in (-0.4, 0.4):
+        x, y = P(k, R - 1.2 + dr); put(round(x), round(y), BRACT_D if dr > 0 else BRACT)
 
 # --- each boll: three lobes on a star of brown husk leaves
 lobes = []
