@@ -52,6 +52,8 @@ jobs:
           git archive HEAD | tar -x -C _site
           cp index.toml pack.toml _site/
           rm -rf _site/.github _site/prism
+          # Optional resource packs (extras/, not in the pack), one zip each.
+          for d in extras/*/; do (cd "$d" && zip -qr "../../_site/extras/$(basename "$d").zip" .); done
           # The Prism instance players import once.
           mkdir -p prism/.minecraft
           curl -fsSL -o prism/.minecraft/packwiz-installer-bootstrap.jar \

@@ -36,6 +36,19 @@ never touches them. Shaders work because Iris is in the pack, and
 resource packs with animated or custom mobs (Fresh Animations and the
 like) because Entity Model Features and Entity Texture Features are.
 
+### Extras: small fixes you can add
+
+Resource packs made for this pack, for anyone who wants them. Download
+the zip and drop it in the instance's resource packs (as above), then
+turn it on in Options > Resource Packs.
+
+- [dark-iron-chandelier.zip](https://basse00.github.io/cottoncraft/extras/dark-iron-chandelier.zip):
+  the iron chandelier (Macaw's Lights) with a frame half as bright.
+  Shaders such as Complementary make blocks that give light glow, so its
+  frame looked almost white; without shaders it looks very dark.
+
+The files are in `extras/`; each folder becomes a zip on the site.
+
 If the game won't start with a version mismatch, the Minecraft or Fabric
 version has changed: right-click the instance > Edit > Version, and set it
 to what `pack.toml` says (or import the zip again).

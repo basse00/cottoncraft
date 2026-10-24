@@ -1,0 +1,9 @@
+{
+ "parent": "mcwlights:block/parent/chandelier",
+ "textures": {
+  "0": "mcwlights:block/candle",
+  "2": "cottoncraft:block/dark_iron",
+  "4": "mcwlights:block/iron_chain_hanging",
+  "particle": "cottoncraft:block/dark_iron"
+ }
+}
