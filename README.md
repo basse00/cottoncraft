@@ -19,6 +19,11 @@ everyone's game and the server pick it up by themselves.
 5. The server is already in **Multiplayer** as "CottonCraft" (you still
    need to be on the whitelist: `/mc add` on Discord).
 
+The instance gets the CottonCraft icon on import. Imported before it
+existed? Right-click the instance > **Change Icon** > **Add Icon**, and
+pick [cottoncraft.png](https://raw.githubusercontent.com/basse00/cottoncraft/main/prism/cottoncraft.png)
+(save it first).
+
 That's all. Every time you press Launch it fetches whatever changed since
 last time. Changes reach the site a few minutes after they're merged.
 
