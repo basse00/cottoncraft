@@ -51,6 +51,12 @@ turn it on in Options > Resource Packs.
   the iron chandelier (Macaw's Lights) with a frame half as bright.
   Shaders such as Complementary make blocks that give light glow, so its
   frame looked almost white; without shaders it looks very dark.
+- [polydex-names-only.zip](https://basse00.github.io/cottoncraft/extras/polydex-names-only.zip):
+  on our server the bar at the top only shows while you mine or look at a
+  creature. Type `/polydex hover names on` to also see the name of every
+  block you look at; with this pack on, that is just the name, no empty
+  bar under it (the server makes that bar yellow, this pack hides yellow
+  boss bars). `/polydex hover names off` to go back.
 
 The files are in `extras/`; each folder becomes a zip on the site.
 

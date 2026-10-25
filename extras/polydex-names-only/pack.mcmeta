@@ -1,0 +1,7 @@
+{
+ "pack": {
+  "description": "CottonCraft: Polydex shows only the name of a block (with /polydex hover names on)",
+  "min_format": 97,
+  "max_format": 999
+ }
+}
