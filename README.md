@@ -61,6 +61,8 @@ turn it on in Options > Resource Packs.
     at; with this pack that is just the name, without an empty bar under
     it. `/polydex hover names off` to go back.
 
+  Put it **at the top** of the selected resource packs, above any others,
+  or another pack may draw its own bar over it.
   Without this pack a theme shows as a plain coloured bar. The pictures
   are made by `.github/make-bar.py`.
 
