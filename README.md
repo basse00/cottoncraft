@@ -47,11 +47,11 @@ Resource packs made for this pack, for anyone who wants them. Download
 the zip and drop it in the instance's resource packs (as above), then
 turn it on in Options > Resource Packs.
 
-- [dark-iron-chandelier.zip](https://basse00.github.io/cottoncraft/extras/dark-iron-chandelier.zip):
+- [dark-iron-chandelier-1.0.0.zip](https://basse00.github.io/cottoncraft/extras/dark-iron-chandelier-1.0.0.zip):
   the iron chandelier (Macaw's Lights) with a frame half as bright.
   Shaders such as Complementary make blocks that give light glow, so its
   frame looked almost white; without shaders it looks very dark.
-- [polydex-bar.zip](https://basse00.github.io/cottoncraft/extras/polydex-bar.zip):
+- [polydex-bar-1.3.1.zip](https://basse00.github.io/cottoncraft/extras/polydex-bar-1.3.1.zip):
   for the bar at the top on our server (it shows while you mine or look at
   a creature).
   - `/polydex color <theme>` picks its look: `obsidian` (deep purple),
@@ -64,7 +64,9 @@ turn it on in Options > Resource Packs.
   Without this pack a theme shows as a plain coloured bar. The pictures
   are made by `.github/make-bar.py`.
 
-The files are in `extras/`; each folder becomes a zip on the site.
+The files are in `extras/`; each folder becomes a zip on the site, named
+after the folder and its `VERSION` file. Changed one? Raise its `VERSION`
+and the link above to match (the site isn't published until they do).
 
 If the game won't start with a version mismatch, the Minecraft or Fabric
 version has changed: right-click the instance > Edit > Version, and set it

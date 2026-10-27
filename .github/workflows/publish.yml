@@ -52,8 +52,15 @@ jobs:
           git archive HEAD | tar -x -C _site
           cp index.toml pack.toml _site/
           rm -rf _site/.github _site/prism
-          # Optional resource packs (extras/, not in the pack), one zip each.
-          for d in extras/*/; do (cd "$d" && zip -qr "../../_site/extras/$(basename "$d").zip" .); done
+          # Optional resource packs (extras/, not in the pack), one zip each,
+          # named after the folder and its VERSION file: name-1.2.3.zip. The
+          # README links to that name; name.zip stays too, for older links.
+          for d in extras/*/; do
+            n=$(basename "$d"); v=$(cat "$d/VERSION")
+            grep -q "extras/$n-$v.zip" README.md || { echo "README.md should link extras/$n-$v.zip" >&2; exit 1; }
+            (cd "$d" && zip -qr "../../_site/extras/$n-$v.zip" . -x VERSION)
+            cp "_site/extras/$n-$v.zip" "_site/extras/$n.zip"
+          done
           # The Prism instance players import once.
           mkdir -p prism/.minecraft
           curl -fsSL -o prism/.minecraft/packwiz-installer-bootstrap.jar \
