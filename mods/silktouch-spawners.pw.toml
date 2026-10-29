@@ -1,0 +1,13 @@
+name = "SilkSpawners"
+filename = "SilkSpawners-1.3.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/f5trVhMK/versions/7Vt6Ayf4/SilkSpawners-1.3.jar"
+hash-format = "sha512"
+hash = "a11044b34e151ef0a947e29a13a9efc945df260237deb73cdd3ae596276ef18211071de7163619e818365b667942d87c6a9e8b3878b1ba7e65fc5bb2a4be7359"
+
+[update]
+[update.modrinth]
+mod-id = "f5trVhMK"
+version = "7Vt6Ayf4"
