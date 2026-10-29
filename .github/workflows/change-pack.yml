@@ -33,6 +33,7 @@ on:
           # BEGIN branch list (branch-list.yml writes this part)
           - "new branch"
           - "new branch, named below"
+          - "basse"
           - "sneakyspank"
           # END branch list
       new_branch:
