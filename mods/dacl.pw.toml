@@ -1,0 +1,13 @@
+name = "DACL"
+filename = "dacl-1.5.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/Y6oD1lqQ/versions/Xwu7jEJb/dacl-1.5.jar"
+hash-format = "sha512"
+hash = "3c5f6f9c3e0cebede629f032729a64137475abeea35eada26fd9f0b77aed46d638dfe1ee13b669a61c6b30f2944a6c2c253425d1bf389e9bd80967a411654efd"
+
+[update]
+[update.modrinth]
+mod-id = "Y6oD1lqQ"
+version = "Xwu7jEJb"
