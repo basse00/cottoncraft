@@ -193,9 +193,8 @@ Things to know:
 |---|---|---|
 | Fabric API | both | needed by most mods |
 | Waystones (+ Balm, Shogi) | both | teleport stones |
-| VeinMiner (+ Fabric Language Kotlin) | both | mine a whole ore vein at once |
+| VeinMiner (+ Fabric Language Kotlin) | both | mine a whole ore vein (or tree) at once |
 | VeinMiner Hotkey | client | the key to turn VeinMiner on |
-| Tree Harvester (+ Collective) | server | chop one log, the whole tree falls |
 | BlueMap | server | the web map |
 | Lithium, FerriteCore | both | faster, less memory |
 | Sodium, Mod Menu (+ Text Placeholder API) | client | faster rendering, mod list in the menu |
