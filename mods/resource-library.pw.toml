@@ -1,0 +1,13 @@
+name = "Resource Library"
+filename = "resourcelibrary-fabric-26.3-4.2.0.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/XLhounCW/versions/coQCkmjA/resourcelibrary-fabric-26.3-4.2.0.jar"
+hash-format = "sha512"
+hash = "d15210fcbd18aaac047f79a822832c14ddb7c34aeb1121abe3db4eff776aa0174599c400a9ebab813492780a682ac51d1054551bb6e3ca3e0ad36b498e615595"
+
+[update]
+[update.modrinth]
+mod-id = "XLhounCW"
+version = "coQCkmjA"
